@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <title>Đăng kí tài khoản</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="container">
+            <div class="row justify-content-around">
+                <form id="form_reg" action="reg.php" class="col-md-6 bg-light p-3 my-3" method="post">
+                    <h1 class="text-center text-uppercase h3 py-3">Đăng kí tài khoản</h1>
+                    <div class="form-group">
+                        <label for="fullname">Họ và Tên</label>
+                        <input type="text" name="fullname" id="fullname" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Tên Đăng Nhập</label>
+                        <input type="text" name="username" id="username" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mật khẩu</label>
+                        <input type="password" name="password" id="password" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <label for="Email">Email</label>
+                        <input type="email" name="Email" id="Email" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ</label>
+                        <input type="text" name="address" id="address" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Giới tính</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" name="gender" id="male" value="male" class="form-check-input" checked>
+                                <label for="male" class="form-check-label">Nam</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" name="gender" id="female" value="female" class="form-check-input">
+                                <label for="female" class="form-check-label">Nữ</label>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Đăng Kí" class="btn-primary btn btn-block mb-3" name="btn-reg">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
