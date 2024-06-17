@@ -13,7 +13,7 @@ if(isset($_POST['btn-reg'])) {
     echo "<pre>";
     print_r($_POST);
 
-    $sql = "INSERT INTO `users` (`fullname`, `username`, `password`, `email`, `address`, `gender`)  VALUE('$fullname', '$username', '$password', '$email', '$address', '$gender') ";
+    $sql = "INSERT INTO `dangkytaikhoan` (`fullname`, `username`, `password`, `email`, `address`, `gender`)  VALUE('$fullname', '$username', '$password', '$email', '$address', '$gender') ";
 
     if($conn->query($sql)===TRUE) {
         echo "Lưu dữ liệu thành công";

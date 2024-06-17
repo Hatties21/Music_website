@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>1</title>
+  <link rel="stylesheet" href="../assets/css/reset.css">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/music.css">
+  <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="navbar-header">
+      <a href="" class="navbar-brand">
+        <img src="../assets/images/logo.png" alt="">
+      </a>
+    </div>
+    <nav>
+      <ul class="nav navbar-nav navbar-link">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../category/piano">Piano</a></li>
+        <li><a href="../category/guitar">Guitar</a></li>
+        <li><a href="../category/anime">Anime</a></li>
+        <li><a href="../category/elect">EDM</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right navbar-sm">
+        <li><input type="text" id="searchInput" class="search-input" placeholder="Tên bài hát / ca sĩ" onkeyup="searchMusic()"></li>
+        <li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+        <li><a href="../../Login_regist/Login.html">Login</a></li>
+        <li><a href="../../Login_regist/Dangky.html">Regist</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="container-sm player-wrap">
+  <div id="music-player" class="aplayer"></div>
+</div>
+<div class="container-sm box">
+  <div class="main">
+    <div class="main-wrap">
+      <div class="content-box article">
+        <div class="title">
+          <h2>Flower_Dance</h2>
+          <div class="info">
+            <span class="author">DJ Okawari</span> / <span class="date">17-6</span>
+          </div>
+        </div>
+        <div class="content">
+          <p>
+            <img src="../storage/avatar/Flower_Dance.jpg">
+          </p>
+          <p>
+            <br />
+<br />
+This is the purpose of changing<br />
+Hydrogen into breathable oxygen<br />
+And they are necessary here<br />
+As the air is on earth<br />
+<br>
+But I still say they're flowers<br />
+<br>
+If you like<br />
+<br>
+Do you sell them?<br />
+I am afraid not<br />
+But maybe we can make a deal<br />
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  </div>
+</div>
+<footer>
+  <div class="container">
+    <div class="copyright">
+      <p>Copyright © <span class="update-year">2024</span> Hatties - All Rights Reserved</p>
+    </div>
+  </div>
+</footer>
+<script src="http://cdn.bootcss.com/aplayer/1.5.8/APlayer.min.js"></script>
+<script>
+  var ap = new APlayer({
+    element: document.getElementById('music-player'), // Optional, player element
+    narrow: false,                                    // Optional, narrow style
+    autoplay: true,                                   // Optional, autoplay song(s), not supported by mobile browsers
+    showlrc: 0,                                       // Optional, show lrc, can be 0, 1, 2, see: ###With lrc
+    mutex: true,                                      // Optional, pause other players when this player playing
+    theme: '#B72712',                                 // Optional, theme color, default: #b7daff
+    mode: 'circulation',                              // Optional, play mode, `random` `single` `circulation`(loop) `order`(no loop), default: `circulation`
+    preload: 'metadata',                              // Optional, the way to load music, can be 'none' 'metadata' 'auto', default: 'auto'
+    listmaxheight: '513px',                           // Optional, max height of play list
+    music: {                                          // Required, music info
+      title: 'Ten bai hat',                                 // Required, music title
+      author: 'Tac gia',                          // Required, music author
+      url: '../../storage/category/2.mp3',  // Required, music url
+      pic: '../storage/avatar/Flower_Dance.jpg'  // Optional, music picture
+    }
+  });
+</script>
+</body>
+</html>
