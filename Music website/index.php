@@ -1,0 +1,266 @@
+<?php
+session_start();
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Website nghe nhac</title>
+  <link rel="icon" href="favicon.ico" mce_href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="favicon.ico" mce_href="http://jt.hapboy.xyz/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="assets/css/reset.css">
+  <link rel="stylesheet" href="assets/css/common.css">
+  <link rel="stylesheet" href="assets/css/slider.css">
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Thanh điều hướng -->
+<header>
+  <div class="container">
+    <div class="navbar-header">
+      <a href="" class="navbar-brand">
+        <img src="assets/images/logo.png" alt="logo">
+      </a>
+    </div>
+    <nav>
+      <ul class="nav navbar-nav navbar-link">
+        <li class="active"><a href="index.html">Home</a></li>
+        <li><a href="category/piano">Piano</a></li>
+        <li><a href="category/guitar">Guitar</a></li>
+        <li><a href="category/anime">Anime</a></li>
+        <li><a href="category/elect">EDM</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right navbar-sm">
+        <li><input type="text" id="searchInput" class="search-input" placeholder="Tên bài hát / ca sĩ" onkeyup="searchMusic()"></li>
+        <li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+        <?php if (isset($_SESSION['username'])): ?>
+          <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i> <?php echo $_SESSION['username']; ?></a></li>
+          <li><a href="logout.php">Logout</a></li>
+        <?php else: ?>
+        <li><a href="../account/login.php">Login</a></li>
+        <li><a href="../account/register.php">Register</a></li>
+        <?php endif; ?>
+      </ul>    
+    </nav>
+  </div>
+</header>
+<!-- Đồ thị -->
+<div class="container-sm slider-wrap">
+  <div class="slider">
+    <div class="slider-item-list"></div>
+    <div class="slider-dots">
+      <div class="slider-dots-wrap"></div>
+    </div>
+    <div class="slider-arrows">
+      <div class="slider-arrows-wrap">
+        <span class="slider-arrow slider-arrow-left" onclick="HBSlider.turn(-1)"></span>
+        <span class="slider-arrow slider-arrow-right" onclick="HBSlider.turn(1)"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Khu vực nội dung chính -->
+<div class="container-sm box">
+  <!-- Nội dung chính -->
+  <div class="main">
+    <div class="main-wrap">
+      <div class="content-box">
+        <!-- Khuyến nghị phổ biến -->
+        <div class="hot-recommand">
+          <div class="content-header">
+            <h2><i class="fa fa-music red"></i>Phổ biến</h2>
+            <div class="tab">
+              <a href="category/piano">Piano</a>
+              <span class="line">|</span>
+              <a href="category/guitar">Guitar</a>
+              <span class="line">|</span>
+              <a href="category/anime">Anime</a>
+              <span class="line">|</span>
+              <a href="category/elect">EDM</a>
+            </div>
+            <span class="more"><a href="#">More...</a></span>
+          </div>
+          <ul class="music-list clearfix" id="musicList">
+            <li>
+              <div class="u-cover">
+                <img src="../../storage/avatar/Schwarz.jpg" alt="Hình ảnh biểu tượng">
+                <a title="Tiêu đề bài hát" href="../../music/1.html" class="msk"></a>
+              </div>
+              <p class="dec">
+                <a title="Tiêu đề bài hát" href="../../music/1.html">Tên bài hát</a>
+              </p>
+              <div class="author">Tên tác giả</div>
+            </li>
+            <li>
+              <div class="u-cover">
+                <img src="../../storage/avatar/Flower_Dance.jpg" alt="Hình ảnh biểu tượng">
+                <a title="Tiêu đề bài hát" href="../../music/2.html" class="msk"></a>
+              </div>
+              <p class="dec">
+                <a title="Tiêu đề bài hát" href="../../music/2.html">Flower_Dance</a>
+              </p>
+              <div class="author">DJ Okawari</div>
+            </li>
+            <!-- Add more music items here -->
+          </ul>         
+        </div>
+        <!-- Danh sách phân loại -->
+        <div class="category">
+          <div class="content-header">
+            <h2><i class="fa fa-music red"></i>Danh sách phân loại</h2>
+          </div>
+          <div class="row">
+            <div class="category-music-list">
+              <div class="category-header">🎹 Piano</div>
+              <ul>
+                <!--Add Songs-->
+                <li class="music-list-item">
+                  <div class="title">
+                    <div class="title_wrap">
+                      <span class="rank">1</span>
+                      <a href="./music/2.html" title="Tên bài hát">Flower_Dance</a>
+                    </div>
+                  </div>
+                  <div class="info">
+                    <span class="date">17-6</span>
+                    <span class="avatar"><img
+                        src="../../storage/avatar/Flower_Dance.jpg"></span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="category-music-list">
+              <div class="category-header">🎸 Guitar</div>
+              <ul>
+                <!--Add Songs-->
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="category-music-list">
+              <div class="category-header">🍡 Anime</div>
+              <ul>
+                <!--Add Songs-->
+              </ul>
+            </div>
+            <div class="category-music-list">
+              <div class="category-header">⚡️ EDM</div>
+              <ul>
+                <!--Add Songs-->
+                <li class="music-list-item">
+                  <div class="title">
+                    <div class="title_wrap">
+                      <span class="rank">1</span>
+                      <a href="./music/1.html" title="Tên bài hát">Tên bài hát</a>
+                    </div>
+                  </div>
+                  <div class="info">
+                    <span class="date">17-6</span>
+                    <span class="avatar"><img
+                        src="./storage/avatar/Schwarz.jpg"></span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Thanh bên -->
+  <div class="sidebar" style="min-height: 1094px">
+    <div class="right-module">
+      <h4>Newest Songs</h4>
+      <ul class="new-artist-songs">
+        <li class="artist-song">
+          <div class="avatar">
+            <img src="./storage/avatar/Schwarz.jpg">
+          </div>
+          <div class="info">
+            <h3>Tên bài hát</h3>
+            <p>Tac gia</p>
+          </div>
+          <a href="./music/1.html" title="Tên bài hát" class="cover-link"></a>
+        </li>
+        <li class="artist-song">
+          <div class="avatar">
+            <img src="./storage/avatar/Flower_Dance.jpg">
+          </div>
+          <div class="info">
+            <h3>Flower_Dance</h3>
+            <p>DJ Okawari</p>
+          </div>
+          <a href="./music/2.html" title="Tên bài hát" class="cover-link"></a>
+        </li>
+      </ul>
+    </div>
+    <div class="right-module">
+      <h4>Hot Songs</h4>
+      <ul class="new-artist-songs">
+        <li class="artist-song">
+          <div class="avatar">
+            <img src="./storage/avatar/Schwarz.jpg">
+          </div>
+          <div class="info">
+            <h3>Tên bài hát</h3>
+            <p>Tac gia</p>
+          </div>
+          <a href="./music/1.html" title="Tên bài hát" class="cover-link"></a>
+        </li>
+        <li class="artist-song">
+          <div class="avatar">
+            <img src="./storage/avatar/Flower_Dance.jpg">
+          </div>
+          <div class="info">
+            <h3>Flower_Dance</h3>
+            <p>DJ Okawari</p>
+          </div>
+          <a href="./music/2.html" title="Tên bài hát" class="cover-link"></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- Bản quyền dưới cùng -->
+<footer>
+  <div class="container">
+    <div class="copyright">
+      <p>Copyright © <span class="update-year">2024</span> Hatties - All Rights Reserved</p>
+    </div>
+  </div>
+</footer>
+<!-- JS -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/HBSlider.js"></script>
+<script src="assets/js/search.js"></script>
+<script>
+  // Dữ liệu sơ đồ xoay
+  var sliderData = [
+  {
+      title: 'Tên bài hát',
+      pic: './storage/slider/01.avif',
+      url: './music/1.html'
+    },
+  
+    {
+      title: 'Flower Dance',
+      pic: './storage/slider/Flower_Dance.jpg',
+      url: './music/2.html'
+    },  
+  ];
+  $(function () {
+    HBSlider.setConfig({
+      autoPlay: true,
+      delay: 5
+    });
+    HBSlider.setItems(sliderData);
+    HBSlider.init();
+    HBSlider.play();
+  });
+</script>
+
+</body>
+</html>
