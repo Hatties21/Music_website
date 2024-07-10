@@ -1,5 +1,19 @@
 <?php
 session_start();
+
+$conn = new mysqli( 'localhost', 'root', '', 'music_website' );
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Truy vấn các bài hát phổ biến
+$popularSongs = $conn->query("SELECT * FROM songs ORDER BY created_at DESC LIMIT 5");
+
+// Truy vấn các bài hát mới nhất
+$newestSongs = $conn->query("SELECT * FROM songs ORDER BY created_at DESC LIMIT 5");
+
+// Truy vấn các bài hát hot
+$hotSongs = $conn->query("SELECT * FROM songs ORDER BY created_at DESC LIMIT 5");
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +29,12 @@ session_start();
   <link rel="stylesheet" href="assets/css/common.css">
   <link rel="stylesheet" href="assets/css/slider.css">
   <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <style>
+    .upload-form-container {
+      display: none;
+    }
+  </style>
+
 </head>
 <body>
 <!-- Thanh điều hướng -->
@@ -27,11 +47,11 @@ session_start();
     </div>
     <nav>
       <ul class="nav navbar-nav navbar-link">
-        <li class="active"><a href="index.html">Home</a></li>
-        <li><a href="category/piano">Piano</a></li>
-        <li><a href="category/guitar">Guitar</a></li>
-        <li><a href="category/anime">Anime</a></li>
-        <li><a href="category/elect">EDM</a></li>
+        <li class="active"><a href="index.php">Home</a></li>
+        <li><a href="../../category/categories/2.php">Categories</a></li>
+        <li><a href="../../category/hits/3.php">Hits</a></li>
+        <li><a href="../../category/artist/1.php">Artists</a></li>
+        <li><a href="../../category/news/4.php">News</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right navbar-sm">
         <li><input type="text" id="searchInput" class="search-input" placeholder="Tên bài hát / ca sĩ" onkeyup="searchMusic()"></li>
@@ -72,43 +92,73 @@ session_start();
         <div class="hot-recommand">
           <div class="content-header">
             <h2><i class="fa fa-music red"></i>Phổ biến</h2>
-            <div class="tab">
-              <a href="category/piano">Piano</a>
-              <span class="line">|</span>
-              <a href="category/guitar">Guitar</a>
-              <span class="line">|</span>
-              <a href="category/anime">Anime</a>
-              <span class="line">|</span>
-              <a href="category/elect">EDM</a>
-            </div>
-            <span class="more"><a href="#">More...</a></span>
+            
+            <span class="more"><a href="#" onclick="toggleUploadForm()">+</a></span>
           </div>
           <ul class="music-list clearfix" id="musicList">
-            <li>
-              <div class="u-cover">
-                <img src="../../storage/avatar/Schwarz.jpg" alt="Hình ảnh biểu tượng">
-                <a title="Tiêu đề bài hát" href="../../music/1.html" class="msk"></a>
-              </div>
-              <p class="dec">
-                <a title="Tiêu đề bài hát" href="../../music/1.html">Tên bài hát</a>
-              </p>
-              <div class="author">Tên tác giả</div>
-            </li>
-            <li>
-              <div class="u-cover">
-                <img src="../../storage/avatar/Flower_Dance.jpg" alt="Hình ảnh biểu tượng">
-                <a title="Tiêu đề bài hát" href="../../music/2.html" class="msk"></a>
-              </div>
-              <p class="dec">
-                <a title="Tiêu đề bài hát" href="../../music/2.html">Flower_Dance</a>
-              </p>
-              <div class="author">DJ Okawari</div>
-            </li>
+         <!-- Add more music items here -->
+            <?php
+              if ($popularSongs->num_rows > 0) {
+                  while ($row = $popularSongs->fetch_assoc()) {
+                      $songName = $row['song_name'];
+                      $artistName = $row['artist_name'];
+                      $imagePath = $row['image_file_path']; // Thay 'image_file_path' bằng tên cột thực tế trong cơ sở dữ liệu của bạn
+                      $musicPath = $row['music_file_path']; // Thay 'music_file_path' bằng tên cột chứa đường dẫn âm nhạc
+                  
+                      echo '<li>';
+                      echo '<div class="u-cover">';
+                      echo '<img src="' . $imagePath . '">';
+                      echo '<a title="' . $songName . '" href="' . $musicPath . '" class="msk"></a>';
+                      echo '</div>';
+                      echo '<p class="dec">';
+                      echo '<a title="' . $songName . '" href="' . $musicPath . '">' . $songName . '</a>';
+                      echo '</p>';
+                      echo '<div class="author">' . $artistName . '</div>'; // Hiển thị tên tác giả
+                      echo '</li>';
+                  }
+              } else {
+                  echo '<li>Không có bài hát phổ biến nào.</li>';
+              }
+              ?>
             <!-- Add more music items here -->
           </ul>         
         </div>
-        <!-- Danh sách phân loại -->
-        <div class="category">
+
+        <!-- Nút mở form Upload -->
+        <div class="toggle-upload-form">
+            <button onclick="toggleUploadForm()">+</button>
+          </div>
+
+          <div class="upload-form-container" id="uploadFormContainer">
+            <h2>Tải lên bài hát mới</h2>
+            <form id="uploadForm" action="upload/upload.php" method="post" enctype="multipart/form-data">
+              <label for="song_name">Tên bài hát:</label>
+              <input type="text" id="song_name" name="song_name" required>
+
+              <label for="artist_name">Tên tác giả:</label>
+              <input type="text" id="artist_name" name="artist_name" required>
+
+              <label for="category">Thể loại:</label>
+              <select id="category" name="category">
+                <option value="piano">Piano</option>
+                <option value="guitar">Guitar</option>
+                <option value="anime">Anime</option>
+                <option value="edm">EDM</option>
+              </select>
+
+              <label for="image_file">Chọn ảnh:</label>
+              <input type="file" id="image_file" name="image_file" accept="image/*" required>
+
+              <label for="music_file">Chọn file nhạc:</label>
+              <input type="file" id="music_file" name="music_file" accept="audio/*" required>
+
+              <button type="submit">Upload</button>
+            </form>
+          </div>
+          <!-- End Upload Form Container -->
+
+<!-- Danh sách phân loại -->
+<div class="category">
           <div class="content-header">
             <h2><i class="fa fa-music red"></i>Danh sách phân loại</h2>
           </div>
@@ -117,25 +167,74 @@ session_start();
               <div class="category-header">🎹 Piano</div>
               <ul>
                 <!--Add Songs-->
-                <li class="music-list-item">
-                  <div class="title">
-                    <div class="title_wrap">
-                      <span class="rank">1</span>
-                      <a href="./music/2.html" title="Tên bài hát">Flower_Dance</a>
-                    </div>
-                  </div>
-                  <div class="info">
-                    <span class="date">17-6</span>
-                    <span class="avatar"><img
-                        src="../../storage/avatar/Flower_Dance.jpg"></span>
-                  </div>
-                </li>
+                <?php
+                 $pianoSongs = $conn->query("SELECT * FROM songs WHERE category = 'piano' ORDER BY created_at DESC LIMIT 5");
+              
+                 if ($pianoSongs->num_rows > 0) {
+                   $rank = 1;
+                   while ($row = $pianoSongs->fetch_assoc()) {
+                     $songName = $row['song_name'];
+                     $artistName = $row['artist_name'];
+                     $imagePath = $row['image_file_path']; // Thay 'image_file_path' bằng tên cột thực tế trong cơ sở dữ liệu của bạn
+                     $musicPath = $row['music_file_path']; // Thay 'music_file_path' bằng tên cột chứa đường dẫn âm nhạc
+                     $createdAt = date('d-m', strtotime($row['created_at'])); // Định dạng ngày tháng
+              
+                     echo '<li class="music-list-item">';
+                     echo '<div class="title">';
+                     echo '<div class="title_wrap">';
+                     echo '<span class="rank">' . $rank . '</span>';
+                     echo '<a href="' . $musicPath . '" title="' . $songName . '">' . $songName . '</a>';
+                     echo '</div>';
+                     echo '</div>';
+                     echo '<div class="info">';
+                     echo '<span class="date">' . $createdAt . '</span>';
+                     echo '<span class="avatar"><img src="' . $imagePath . '"></span>';
+                     echo '</div>';
+                     echo '</li>';
+              
+                     $rank++;
+                   }
+                 } else {
+                   echo '<li>Không có bài hát nào.</li>';
+                 }
+                 ?>
               </ul>
             </div>
             <div class="category-music-list">
               <div class="category-header">🎸 Guitar</div>
               <ul>
                 <!--Add Songs-->
+                <?php
+                  $guitarSongs = $conn->query("SELECT * FROM songs WHERE category = 'guitar' ORDER BY created_at DESC LIMIT 5");
+                            
+                  if ($guitarSongs->num_rows > 0) {
+                    $rank = 1;
+                    while ($row = $guitarSongs->fetch_assoc()) {
+                      $songName = $row['song_name'];
+                      $artistName = $row['artist_name'];
+                      $imagePath = $row['image_file_path']; // Thay 'image_file_path' bằng tên cột thực tế trong cơ sở dữ liệu của bạn
+                      $musicPath = $row['music_file_path']; // Thay 'music_file_path' bằng tên cột chứa đường dẫn âm nhạc
+                      $createdAt = date('d-m', strtotime($row['created_at'])); // Định dạng ngày tháng
+                    
+                      echo '<li class="music-list-item">';
+                      echo '<div class="title">';
+                      echo '<div class="title_wrap">';
+                      echo '<span class="rank">' . $rank . '</span>';
+                      echo '<a href="' . $musicPath . '" title="' . $songName . '">' . $songName . '</a>';
+                      echo '</div>';
+                      echo '</div>';
+                      echo '<div class="info">';
+                      echo '<span class="date">' . $createdAt . '</span>';
+                      echo '<span class="avatar"><img src="' . $imagePath . '"></span>';
+                      echo '</div>';
+                      echo '</li>';
+                    
+                      $rank++;
+                    }
+                  } else {
+                    echo '<li>Không có bài hát nào.</li>';
+                  }
+                  ?>
               </ul>
             </div>
           </div>
@@ -144,25 +243,74 @@ session_start();
               <div class="category-header">🍡 Anime</div>
               <ul>
                 <!--Add Songs-->
+                <?php
+                 $animeSongs = $conn->query("SELECT * FROM songs WHERE category = 'anime' ORDER BY created_at DESC LIMIT 5");
+             
+                 if ($animeSongs->num_rows > 0) {
+                   $rank = 1;
+                   while ($row = $animeSongs->fetch_assoc()) {
+                     $songName = $row['song_name'];
+                     $artistName = $row['artist_name'];
+                     $imagePath = $row['image_file_path']; // Thay 'image_file_path' bằng tên cột thực tế trong cơ sở dữ liệu của bạn
+                     $musicPath = $row['music_file_path']; // Thay 'music_file_path' bằng tên cột chứa đường dẫn âm nhạc
+                     $createdAt = date('d-m', strtotime($row['created_at'])); // Định dạng ngày tháng
+             
+                     echo '<li class="music-list-item">';
+                     echo '<div class="title">';
+                     echo '<div class="title_wrap">';
+                     echo '<span class="rank">' . $rank . '</span>';
+                     echo '<a href="' . $musicPath . '" title="' . $songName . '">' . $songName . '</a>';
+                     echo '</div>';
+                     echo '</div>';
+                     echo '<div class="info">';
+                     echo '<span class="date">' . $createdAt . '</span>';
+                     echo '<span class="avatar"><img src="' . $imagePath . '"></span>';
+                     echo '</div>';
+                     echo '</li>';
+             
+                     $rank++;
+                   }
+                 } else {
+                   echo '<li>Không có bài hát nào.</li>';
+                 }
+                 ?>
               </ul>
             </div>
             <div class="category-music-list">
               <div class="category-header">⚡️ EDM</div>
               <ul>
                 <!--Add Songs-->
-                <li class="music-list-item">
-                  <div class="title">
-                    <div class="title_wrap">
-                      <span class="rank">1</span>
-                      <a href="./music/1.html" title="Tên bài hát">Tên bài hát</a>
-                    </div>
-                  </div>
-                  <div class="info">
-                    <span class="date">17-6</span>
-                    <span class="avatar"><img
-                        src="./storage/avatar/Schwarz.jpg"></span>
-                  </div>
-                </li>
+                <?php
+                 $edmSongs = $conn->query("SELECT * FROM songs WHERE category = 'edm' ORDER BY created_at DESC LIMIT 5");
+             
+                 if ($edmSongs->num_rows > 0) {
+                   $rank = 1;
+                   while ($row = $edmSongs->fetch_assoc()) {
+                     $songName = $row['song_name'];
+                     $artistName = $row['artist_name'];
+                     $imagePath = $row['image_file_path']; // Thay 'image_file_path' bằng tên cột thực tế trong cơ sở dữ liệu của bạn
+                     $musicPath = $row['music_file_path']; // Thay 'music_file_path' bằng tên cột chứa đường dẫn âm nhạc
+                     $createdAt = date('d-m', strtotime($row['created_at'])); // Định dạng ngày tháng
+             
+                     echo '<li class="music-list-item">';
+                     echo '<div class="title">';
+                     echo '<div class="title_wrap">';
+                     echo '<span class="rank">' . $rank . '</span>';
+                     echo '<a href="' . $musicPath . '" title="' . $songName . '">' . $songName . '</a>';
+                     echo '</div>';
+                     echo '</div>';
+                     echo '<div class="info">';
+                     echo '<span class="date">' . $createdAt . '</span>';
+                     echo '<span class="avatar"><img src="' . $imagePath . '"></span>';
+                     echo '</div>';
+                     echo '</li>';
+             
+                     $rank++;
+                   }
+                 } else {
+                   echo '<li>Không có bài hát nào.</li>';
+                 }
+                 ?>
               </ul>
             </div>
           </div>
@@ -170,56 +318,69 @@ session_start();
       </div>
     </div>
   </div>
+
   <!-- Thanh bên -->
   <div class="sidebar" style="min-height: 1094px">
     <div class="right-module">
       <h4>Newest Songs</h4>
       <ul class="new-artist-songs">
-        <li class="artist-song">
-          <div class="avatar">
-            <img src="./storage/avatar/Schwarz.jpg">
-          </div>
-          <div class="info">
-            <h3>Tên bài hát</h3>
-            <p>Tac gia</p>
-          </div>
-          <a href="./music/1.html" title="Tên bài hát" class="cover-link"></a>
-        </li>
-        <li class="artist-song">
-          <div class="avatar">
-            <img src="./storage/avatar/Flower_Dance.jpg">
-          </div>
-          <div class="info">
-            <h3>Flower_Dance</h3>
-            <p>DJ Okawari</p>
-          </div>
-          <a href="./music/2.html" title="Tên bài hát" class="cover-link"></a>
-        </li>
+        <!-- add song -->
+        <?php
+        $newestSongs = $conn->query("SELECT * FROM songs ORDER BY created_at DESC LIMIT 5");
+    
+        if ($newestSongs->num_rows > 0) {
+          while ($row = $newestSongs->fetch_assoc()) {
+            $songName = $row['song_name'];
+            $artistName = $row['artist_name'];
+            $imagePath = $row['image_file_path']; // Thay 'image_file_path' bằng tên cột thực tế trong cơ sở dữ liệu của bạn
+            $musicPath = $row['music_file_path']; // Thay 'music_file_path' bằng tên cột chứa đường dẫn âm nhạc
+    
+            echo '<li class="artist-song">';
+            echo '<div class="avatar">';
+            echo '<img src="' . $imagePath . '">';
+            echo '</div>';
+            echo '<div class="info">';
+            echo '<h3>' . $songName . '</h3>';
+            echo '<p>' . $artistName . '</p>';
+            echo '</div>';
+            echo '<a href="' . $musicPath . '" title="' . $songName . '" class="cover-link"></a>';
+            echo '</li>';
+          }
+        } else {
+          echo '<li>Không có bài hát nào.</li>';
+        }
+        ?>
       </ul>
     </div>
     <div class="right-module">
       <h4>Hot Songs</h4>
       <ul class="new-artist-songs">
-        <li class="artist-song">
-          <div class="avatar">
-            <img src="./storage/avatar/Schwarz.jpg">
-          </div>
-          <div class="info">
-            <h3>Tên bài hát</h3>
-            <p>Tac gia</p>
-          </div>
-          <a href="./music/1.html" title="Tên bài hát" class="cover-link"></a>
-        </li>
-        <li class="artist-song">
-          <div class="avatar">
-            <img src="./storage/avatar/Flower_Dance.jpg">
-          </div>
-          <div class="info">
-            <h3>Flower_Dance</h3>
-            <p>DJ Okawari</p>
-          </div>
-          <a href="./music/2.html" title="Tên bài hát" class="cover-link"></a>
-        </li>
+        <!-- add song -->
+        <?php
+        $newestSongs = $conn->query("SELECT * FROM songs ORDER BY created_at DESC LIMIT 5");
+    
+        if ($newestSongs->num_rows > 0) {
+          while ($row = $newestSongs->fetch_assoc()) {
+            $songName = $row['song_name'];
+            $artistName = $row['artist_name'];
+            $imagePath = $row['image_file_path']; // Thay 'image_file_path' bằng tên cột thực tế trong cơ sở dữ liệu của bạn
+            $musicPath = $row['music_file_path']; // Thay 'music_file_path' bằng tên cột chứa đường dẫn âm nhạc
+    
+            echo '<li class="artist-song">';
+            echo '<div class="avatar">';
+            echo '<img src="' . $imagePath . '">';
+            echo '</div>';
+            echo '<div class="info">';
+            echo '<h3>' . $songName . '</h3>';
+            echo '<p>' . $artistName . '</p>';
+            echo '</div>';
+            echo '<a href="' . $musicPath . '" title="' . $songName . '" class="cover-link"></a>';
+            echo '</li>';
+          }
+        } else {
+          echo '<li>Không có bài hát nào.</li>';
+        }
+        ?>
       </ul>
     </div>
   </div>
@@ -261,6 +422,16 @@ session_start();
     HBSlider.play();
   });
 </script>
+<script>
+    function toggleUploadForm() {
+      var formContainer = document.getElementById('uploadFormContainer');
+      if (formContainer.style.display === 'none' || formContainer.style.display === '') {
+        formContainer.style.display = 'block';
+      } else {
+        formContainer.style.display = 'none';
+      }
+    }
+  </script>
 
 </body>
 </html>
